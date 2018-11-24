@@ -202,6 +202,9 @@
                                         <!-- 'Release' or 'Mac App Store' -->
                                         <property name="xcode.configuration" value="${xcode.configuration}" />
                                         <property name="sparkle.feed" value="${sparkle.feed}" />
+                                        <property name="codesign.certificate" value="${codesign.certificate}"/>
+                                        <property name="codesign.arg" value="${codesign.arg}"/>
+                                        <property name="skipSign" value="${skipSign}"/>
                                         <ant antfile="${project.basedir}/build.xml" target="build" dir="." />
                                     </tasks>
                                 </configuration>
@@ -233,15 +236,12 @@
                 <sparkle.feed>local</sparkle.feed>
                 <installer.certificate>3rd Party Mac Developer Installer: David Kocher (G69SCX94XU)</installer.certificate>
                 <codesign.certificate>Developer ID Application: David Kocher (G69SCX94XU)</codesign.certificate>
-                <codesign.arg>--entitlements ../setup/app/default.entitlements</codesign.arg>
+                <codesign.arg>--entitlements ../setup/app/sandbox.entitlements</codesign.arg>
             </properties>
         </profile>
         <profile>
-            <id>sign</id>
+            <id>installer</id>
             <activation>
-                <property>
-                    <name>env.JENKINS_HOME</name>
-                </property>
                 <os>
                     <family>Mac</family>
                 </os>
@@ -251,25 +251,6 @@
                     <plugin>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
-                            <execution>
-                                <id>run-ant-build-target</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                        <property name="home" value="${main.basedir}" />
-                                        <property name="version" value="${project.version}" />
-                                        <property name="revision" value="${git.commitsCount}" />
-                                        <property name="git.revision" value="${git.revision}" />
-                                        <!-- 'Release' or 'Mac App Store' -->
-                                        <property name="xcode.configuration" value="${xcode.configuration}" />
-                                        <property name="sparkle.feed" value="${sparkle.feed}" />
-                                        <ant antfile="${project.basedir}/build.xml" target="build" dir="." />
-                                    </tasks>
-                                </configuration>
-                            </execution>
                             <execution>
                                 <id>run-ant-package-target</id>
                                 <phase>install</phase>
@@ -287,6 +268,7 @@
                                         <property name="sparkle.feed" value="${sparkle.feed}" />
                                         <property name="codesign.certificate" value="${codesign.certificate}" />
                                         <property name="codesign.arg" value="${codesign.arg}" />
+                                        <property name="skipSign" value="${skipSign}"/>
                                         <ant antfile="${project.basedir}/build.xml" target="package" dir="." />
                                     </tasks>
                                 </configuration>
